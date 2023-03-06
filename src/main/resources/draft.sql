@@ -1,5 +1,5 @@
 drop schema airport cascade;
-create schema if not exists airport;
+create schema if not exists microairport;
 
 set schema 'airport';
 

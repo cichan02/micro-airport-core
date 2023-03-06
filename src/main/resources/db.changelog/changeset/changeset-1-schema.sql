@@ -98,5 +98,5 @@ create table if not exists tickets(
 --rollback drop table tickets
 
 --changeset cichan:add-email-to-users
-alter table users add column email varchar(100) not null unique;
+alter table users add column if not exists email varchar(100) not null unique;
 --rollback alter table users drop column if exists email
