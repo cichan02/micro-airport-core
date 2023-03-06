@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="by.piskunou.solvdlaba.persistence.PassengerRepository">
+
+    <resultMap id="elementaryMap" type="Passenger" autoMapping="false">
+        <id property="id" column="passenger_id"/>
+        <result property="firstname" column="passenger_firstname"/>
+        <result property="surname" column="passenger_surname"/>
+    </resultMap>
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="id" parameterType="Passenger">
+        insert into passengers(fk_country_id, firstname, surname, date_of_birth, age, gender)
+        values (#{country.id}, #{firstname}, #{surname},
+                #{dateOfBirth}, #{age}, #{gender})
+    </insert>
+
+    <select id="isExistsById" resultType="boolean">
+        select exists (select from passengers where id = #{id})
+    </select>
+
+</mapper>

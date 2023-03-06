@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="by.piskunou.solvdlaba.persistence.CityRepository">
+
+    <resultMap id="elementaryMap" type="City" autoMapping="false">
+        <id property="id" column="city_id"/>
+        <result property="name" column="city_name"/>
+    </resultMap>
+
+    <resultMap id="withCountryMap" type="City" autoMapping="false" extends="elementaryMap">
+        <association property="country" autoMapping="false"
+                     resultMap="by.piskunou.solvdlaba.persistence.CountryRepository.elementaryMap"/>
+    </resultMap>
+
+    <resultMap id="fullMap" type="City" autoMapping="false" extends="withCountryMap">
+        <collection property="airports" ofType="Airport" javaType="java.util.List" autoMapping="false"
+                    resultMap="by.piskunou.solvdlaba.persistence.AirportRepository.fullMap"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="elementaryMap">
+        select id as city_id,
+               name as city_name
+        from cities
+    </select>
+
+    <select id="findById" resultMap="withCountryMap">
+        select cities.id as city_id,
+               cities.name as city_name,
+
+               countries.id as country_id,
+               countries.name as country_name
+
+        from cities inner join countries on cities.fk_country_id = countries.id
+        where cities.id = #{id}
+    </select>
+
+    <select id="findByIdWithAirports" resultMap="fullMap">
+        select cities.id as city_id,
+               cities.name as city_name,
+
+               countries.id as country_id,
+               countries.name as country_name,
+
+               airports.id as airport_id,
+               airports.name as airport_name,
+               airports.iata as airport_iata_code,
+               airports.icao as airport_icao_code
+
+        from cities inner join countries on cities.fk_country_id = countries.id
+                    left join airports on cities.id = airports.fk_city_id
+        where cities.id = #{id}
+    </select>
+
+    <select id="search" resultMap="fullMap">
+        select cities.id as city_id,
+               cities.name as city_name,
+
+               countries.id as country_id,
+               countries.name as country_name,
+
+               airports.id as airport_id,
+               airports.name as airport_name,
+               airports.iata as airport_iata_code,
+               airports.icao as airport_icao_code
+
+        from cities inner join countries on cities.fk_country_id = countries.id
+                    left join airports on cities.id = airports.fk_city_id
+        where cities.name like #{inquiry} or
+              countries.name like #{inquiry} or
+              airports.name like #{inquiry} or
+              airports.iata like #{inquiry} or
+              airports.icao like #{inquiry}
+    </select>
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="city.id">
+        insert into cities(fk_country_id, name) values(#{countryId}, #{city.name})
+    </insert>
+
+    <update id="update">
+        update cities set fk_country_id = #{countryId},
+                          name = #{city.name}
+        where id = #{city.id}
+    </update>
+
+    <delete id="removeById">
+        delete from cities where id = #{id}
+    </delete>
+
+    <select id="isExistsById" resultType="boolean">
+        select exists (select from cities where id = #{id})
+    </select>
+
+    <select id="isExistsByName" resultType="boolean">
+        select exists (select from cities where name = #{name}
+        <if test="id != null">
+            and id != #{id}
+        </if>)
+    </select>
+
+</mapper>

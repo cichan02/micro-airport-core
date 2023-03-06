@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="by.piskunou.solvdlaba.persistence.TicketRepository">
+
+    <resultMap id="elementaryMap" type="Ticket" autoMapping="false">
+        <id property="id" column="ticket_id"/>
+    </resultMap>
+
+    <resultMap id="fullMap" type="Ticket" autoMapping="false" extends="elementaryMap">
+        <association property="passenger" javaType="Passenger" autoMapping="false"
+                     resultMap="by.piskunou.solvdlaba.persistence.PassengerRepository.elementaryMap"/>
+        <association property="flight" javaType="Flight" autoMapping="false"
+                     resultMap="by.piskunou.solvdlaba.persistence.FlightRepository.searchMap"/>
+        <association property="seat" javaType="Seat" autoMapping="false"/>
+    </resultMap>
+    
+    <select id="findAll" resultMap="elementaryMap">
+        select id as ticket_id
+        from tickets where fk_owner_id = #{userId}
+    </select>
+
+    <select id="findById" resultMap="fullMap">
+        select jsonb_build_object('number', tickets.seat_no) as ticket_seat_no,
+               tickets.id as ticket_id,
+
+               passengers.id as passenger_id,
+               passengers.firstname as passenger_firstname,
+               passengers.surname as passenger_surname,
+
+               flights.id as flight_id,
+               flights.departure_time as flight_departure_time,
+
+               airport_from.id as airport_from_id,
+               airport_from.name as airport_from_name,
+               airport_from.iata as airport_from_iata_code,
+               airport_from.icao as airport_from_icao_code,
+
+               airport_to.id as airport_to_id,
+               airport_to.name as airport_to_name,
+               airport_to.iata as airport_to_iata_code,
+               airport_to.icao as airport_to_icao_code,
+
+               airlines.id as airline_id,
+               airlines.name as airline_name,
+               airlines.iata as airline_iata_code,
+               airlines.icao as airline_icao_code,
+               airlines.callsign as airline_callsign
+
+        from tickets inner join passengers on tickets.fk_passenger_id = passengers.id
+                     inner join flights on tickets.fk_flight_id = flights.id
+                     inner join airports airport_from on flights.fk_airport_from_id = airport_from.id
+                     inner join airports airport_to on flights.fk_airport_to_id = airport_to.id
+                     inner join airlines on flights.fk_airline_id = airlines.id
+        where tickets.id = #{id} and fk_owner_id = #{userId}
+    </select>
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="ticket.id">
+        insert into tickets(fk_owner_id, fk_flight_id, fk_passenger_id, seat_no)
+        values (#{userId}, #{ticket.flight.id}, #{ticket.passenger.id}, #{ticket.seat.number})
+    </insert>
+
+    <select id="isOwner" resultType="boolean">
+        select exists (select from tickets where id = #{ticketId} and fk_owner_id = #{userId})
+    </select>
+
+</mapper>

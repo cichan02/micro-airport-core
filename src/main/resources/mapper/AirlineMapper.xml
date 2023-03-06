@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="by.piskunou.solvdlaba.persistence.AirlineRepository">
+
+    <resultMap id="elementaryMap" type="Airline" autoMapping="false">
+        <id property="id" column="airline_id"/>
+        <result property="name" column="airline_name"/>
+    </resultMap>
+
+    <resultMap id="fullMap" type="Airline" autoMapping="false" extends="elementaryMap">
+        <result property="iata" column="airline_iata_code"/>
+        <result property="icao" column="airline_icao_code"/>
+        <result property="callsign" column="airline_callsign"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="fullMap">
+        select id as airline_id,
+               name as airline_name,
+               iata as airline_iata_code,
+               icao as airline_icao_code,
+               callsign as airline_callsign
+        from airlines
+    </select>
+
+    <select id="findById" resultMap="fullMap">
+        select id as airline_id,
+               name as airline_name,
+               iata as airline_iata_code,
+               icao as airline_icao_code,
+               callsign as airline_callsign
+        from airlines
+        where id = #{id}
+    </select>
+
+    <select id="search" resultMap="fullMap">
+        select id as airline_id,
+               name as airline_name,
+               iata as airline_iata_code,
+               icao as airline_icao_code,
+               callsign as airline_callsign
+        from airlines
+        where name like #{name} and
+              iata like #{iata} and
+              icao like #{icao} and
+              callsign like #{callsign}
+    </select>
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        insert into airlines(name, iata, icao, callsign)
+               values(#{name}, #{iata}, #{icao}, #{callsign})
+    </insert>
+
+    <update id="update">
+        update airlines set name = #{name},
+                            iata = #{iata},
+                            icao = #{icao},
+                            callsign = #{callsign}
+        where id = #{id}
+    </update>
+
+    <delete id="removeById">
+        delete from airlines where id = #{id}
+    </delete>
+
+    <select id="isExistsById" resultType="boolean">
+        select exists (select from airlines where id = #{id})
+    </select>
+
+    <select id="isExistsByName" resultType="boolean">
+        select exists (select from airlines where name = #{name}
+        <if test="id != null">
+            and id != #{id}
+        </if>)
+    </select>
+
+    <select id="isExistsByIata" resultType="boolean">
+        select exists (select from airlines where iata = #{iata}
+        <if test="id != null">
+            and id != #{id}
+        </if>)
+    </select>
+
+    <select id="isExistsByIcao" resultType="boolean">
+        select exists (select from airlines where icao = #{icao}
+        <if test="id != null">
+            and id != #{id}
+        </if>)
+    </select>
+
+    <select id="isExistsByCallsign" resultType="boolean">
+        select exists (select from airlines where callsign = #{callsign}
+        <if test="id != null">
+            and id != #{id}
+        </if>)
+    </select>
+
+</mapper>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="by.piskunou.solvdlaba.persistence.UserRepository">
+
+    <resultMap id="elementaryMap" type="User" autoMapping="false">
+        <id property="id" column="user_id"/>
+        <result property="username" column="user_name"/>
+        <result property="email" column="user_email"/>
+    </resultMap>
+
+    <resultMap id="withPasswordMap" type="User" autoMapping="false" extends="elementaryMap">
+        <result property="password" column="user_password"/>
+    </resultMap>
+
+    <resultMap id="fullMap" type="User" autoMapping="false" extends="withPasswordMap">
+        <result property="role" column="user_role"/>
+    </resultMap>
+
+    <resultMap id="withTicketsMap" type="User" autoMapping="false" extends="fullMap">
+        <collection property="tickets" ofType="Ticket" javaType="java.util.List" autoMapping="false"
+                    resultMap="by.piskunou.solvdlaba.persistence.TicketRepository.fullMap"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="fullMap">
+        select id as user_id,
+               username as user_name,
+               email as user_email,
+               role as user_role
+        from users
+    </select>
+
+    <select id="findById" resultMap="fullMap">
+        select id as user_id,
+               username as user_name,
+               email as user_email,
+               role as user_role
+        from users
+        where id = #{id}
+    </select>
+
+    <select id="findByUsername" resultMap="fullMap">
+        select id as user_id,
+               username as user_name,
+               email as user_email,
+               password as user_password,
+               role as user_role
+        from users
+        where username = #{username}
+    </select>
+
+    <select id="findByEmail" resultMap="fullMap">
+        select id as user_id,
+               username as user_name,
+               email as user_email,
+               password as user_password,
+               role as user_role
+        from users
+        where email = #{email}
+    </select>
+
+    <select id="findByIdWithTickets" resultMap="withTicketsMap">
+        select users.id as user_id,
+               users.username as user_name,
+               email as user_email,
+               role as user_role,
+
+               tickets.id as ticket_id,
+               tickets.seat_no as ticket_seat_no,
+               tickets.place as tikcet_place,
+
+               passengers.id as passenger_id,
+               passengers.firstname as passenger_firstname,
+               passengers.surname as passenger_surname,
+
+               flights.id as flight_id,
+               flights.departure_time as flight_departure_time,
+
+               airport_from.id as airport_from_id,
+               airport_from.name as airport_from_name,
+               airport_from.iata as airport_from_iata_code,
+               airport_from.icao as airport_from_icao_code,
+
+               airport_to.id as airport_to_id,
+               airport_to.name as airport_to_name,
+               airport_to.iata as airport_to_iata_code,
+               airport_to.icao as airport_to_icao_code,
+
+               airlines.id as airline_id,
+               airlines.name as airline_name,
+               airlines.iata as airline_iata_code,
+               airlines.icao as airline_icao_code,
+               airlines.callsign as airline_callsign
+
+        from users left join tickets on users.id = tickets.fk_owner_id
+                   left join passengers on tickets.fk_passenger_id = passengers.id
+                   left join flights on tickets.fk_flight_id = flights.id
+                   left join airports airport_from on flights.fk_airport_from_id = airport_from.id
+                   left join airports airport_to on flights.fk_airport_to_id = airport_to.id
+                   left join airlines on flights.fk_airline_id = airlines.id
+        where users.id = #{id}
+    </select>
+
+    <select id="findPasswordById" resultType="java.lang.String">
+        select password from users where id = #{id}
+    </select>
+    
+    <select id="search" resultMap="elementaryMap">
+        select id as user_id,
+               username as user_name,
+               email as user_email
+        from users
+        where username like #{username}
+    </select>
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        insert into users (username, email, password, role)
+        values(#{username}, #{email}, #{password}, #{role});
+    </insert>
+
+    <update id="update">
+        update users set username = #{username},
+                         email = #{email},
+                         role = #{role}
+        where id = #{id}
+    </update>
+
+    <update id="updatePasswordById">
+        update users set password = #{password} where id = #{id}
+    </update>
+
+    <update id="updatePasswordByUsername">
+        update users set password = #{password} where username = #{username}
+    </update>
+
+    <delete id="removeById">
+        delete from users where id = #{id}
+    </delete>
+
+    <select id="isExistsById" resultType="boolean">
+        select exists (select from users where id = #{id})
+    </select>
+
+    <select id="isExistsByUsername" resultType="boolean">
+        select exists (select from users where username = #{username}
+        <if test="id != null">
+            and id != #{id}
+        </if>)
+    </select>
+
+    <select id="isExistsByEmail" resultType="boolean">
+        select exists (select from users where email = #{email}
+        <if test="id != null">
+            and id != #{id}
+        </if>)
+    </select>
+
+</mapper>
