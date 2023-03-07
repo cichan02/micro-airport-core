@@ -9,13 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
-
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,13 +74,10 @@ class AirportServiceTest {
                                  .icao("GMAD")
                                  .build();
         when(cityService.isExists(85)).thenReturn(true);
-        doAnswer(new Answer() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                Airport airport = invocation.getArgument(1);
-                airport.setId(1L);
-                return null;
-            }
+        doAnswer(invocation -> {
+            Airport airport1 = invocation.getArgument(1);
+            airport1.setId(1L);
+            return null;
         }).when(repository).create(85, airport);
 
         assertEquals(airport, airportService.create(85, airport));
