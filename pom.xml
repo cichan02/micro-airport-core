@@ -122,6 +122,7 @@
             <artifactId>liquibase-core</artifactId>
             <version>${liquibase.version}</version>
         </dependency>
+        <!-- PreLiquibase -->
         <!-- https://mvnrepository.com/artifact/net.lbruun.springboot/preliquibase-spring-boot-starter -->
         <dependency>
             <groupId>net.lbruun.springboot</groupId>
