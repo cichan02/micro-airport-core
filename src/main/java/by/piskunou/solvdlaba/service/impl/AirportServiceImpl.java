@@ -4,21 +4,33 @@ import by.piskunou.solvdlaba.domain.Airport;
 import by.piskunou.solvdlaba.service.AirportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
 public class AirportServiceImpl implements AirportService {
 
-    //todo: rewrite
     @Override
     public Airport findById(long id) {
-        return null;
+        Mono<Airport> airportMono = WebClient.create("http://localhost:8765/airports")
+                .get()
+                .uri("/" + id)
+                .retrieve()
+                .bodyToMono(Airport.class);
+
+        return airportMono.block();
     }
 
-    //todo: rewrite
     @Override
     public boolean isExists(long id) {
-        return false;
+        Mono<Boolean> booleanMono = WebClient.create("http://localhost:8765/airports/exists")
+                .get()
+                .uri("/" + id)
+                .retrieve()
+                .bodyToMono(Boolean.class);
+
+        return booleanMono.block();
     }
 
 }
