@@ -9,15 +9,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.anyLong;
 
 @ExtendWith(MockitoExtension.class)
 class AirlineServiceTest {
@@ -75,13 +79,10 @@ class AirlineServiceTest {
                                   .icao("RAM")
                                   .callsign("ROYAL AIR MAROC")
                                   .build();
-        doAnswer(new Answer() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                Airline airline = invocation.getArgument(0);
-                airline.setId(1L);
-                return null;
-            }
+        doAnswer(invocation -> {
+            Airline airline1 = invocation.getArgument(0);
+            airline1.setId(1L);
+            return null;
         }).when(repository).create(airline);
 
         assertEquals(airline, service.create(airline));

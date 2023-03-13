@@ -16,9 +16,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.any;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
@@ -57,7 +59,6 @@ class AuthServiceTest {
         UsernamePasswordAuthenticationToken authInputToken =
                 new UsernamePasswordAuthenticationToken("Cool boy333", "MTIzNA==");
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
-        Collections.singletonList("ADMIN");
         UsernamePasswordAuthenticationToken authReturnToken = new UsernamePasswordAuthenticationToken(userDetails,
                 null,
                 Collections.singletonList( new SimpleGrantedAuthority( "ADMIN")));
