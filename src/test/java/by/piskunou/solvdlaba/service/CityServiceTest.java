@@ -11,16 +11,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.any;
 
 @ExtendWith(MockitoExtension.class)
 class CityServiceTest {
@@ -87,13 +90,10 @@ class CityServiceTest {
                         .name("Warsaw")
                         .build();
         when(countryService.isExists(4)).thenReturn(true);
-        doAnswer(new Answer() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                City city = invocation.getArgument(1);
-                city.setId(1L);
-                return null;
-            }
+        doAnswer(invocation -> {
+            City city1 = invocation.getArgument(1);
+            city1.setId(1L);
+            return null;
         }).when(repository).create(4, city);
 
         assertEquals(city, cityService.create(4, city));

@@ -12,14 +12,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.any;
 
 @ExtendWith(MockitoExtension.class)
 class TicketServiceTest {
@@ -81,13 +84,10 @@ class TicketServiceTest {
         when(userService.isExists(1)).thenReturn(true);
         when(flightService.isExists(3)).thenReturn(true);
         when(passengerService.isExists(2)).thenReturn(true);
-        doAnswer(new Answer() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                Ticket ticket = invocation.getArgument(1);
-                ticket.setId(10L);
-                return null;
-            }
+        doAnswer(invocation -> {
+            Ticket ticket1 = invocation.getArgument(1);
+            ticket1.setId(10L);
+            return null;
         }).when(repository).create(1, ticket);
 
         assertEquals(ticket, ticketService.create(1, ticket));

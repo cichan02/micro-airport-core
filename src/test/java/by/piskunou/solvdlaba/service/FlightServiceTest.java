@@ -14,9 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,8 +24,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.eq;
 
 @ExtendWith(MockitoExtension.class)
 class FlightServiceTest {
@@ -191,13 +197,10 @@ class FlightServiceTest {
         when(airlineService.isExists(3L)).thenReturn(true);
         when(airplaneService.isExists(4)).thenReturn(true);
         when(airplaneService.findById(4)).thenReturn(airplane);
-        doAnswer(new Answer() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                Flight flight = invocation.getArgument(0);
-                flight.setId(1L);
-                return null;
-            }
+        doAnswer(invocation -> {
+            Flight flight1 = invocation.getArgument(0);
+            flight1.setId(1L);
+            return null;
         }).when(repository).create(flight);
 
         assertEquals(flight, flightService.create(flight));

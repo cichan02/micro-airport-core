@@ -7,13 +7,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class PassportServiceTest {
@@ -34,13 +35,10 @@ class PassportServiceTest {
                                     .number("1234")
                                     .identificationNo("1234")
                                     .build();
-        doAnswer(new Answer() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                Passport passport = invocation.getArgument(0);
-                passport.setId(1L);
-                return null;
-            }
+        doAnswer(invocation -> {
+            Passport passport1 = invocation.getArgument(0);
+            passport1.setId(1L);
+            return null;
         }).when(repository).create(passport);
 
         assertEquals(passport, service.create(passport));

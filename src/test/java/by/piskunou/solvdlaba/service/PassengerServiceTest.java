@@ -9,14 +9,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.doAnswer;
 
 @ExtendWith(MockitoExtension.class)
 class PassengerServiceTest {
@@ -38,13 +37,10 @@ class PassengerServiceTest {
                                        .age(Passenger.Age.ADULT)
                                        .gender(Passenger.Gender.MALE)
                                        .build();
-        doAnswer(new Answer() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                Passenger passenger = invocation.getArgument(0);
-                passenger.setId(1L);
-                return null;
-            }
+        doAnswer(invocation -> {
+            Passenger passenger1 = invocation.getArgument(0);
+            passenger1.setId(1L);
+            return null;
         }).when(repository).create(passenger);
 
         assertEquals(passenger, service.create(passenger));

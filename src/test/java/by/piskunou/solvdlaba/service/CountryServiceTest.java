@@ -9,15 +9,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doAnswer;
 @ExtendWith(MockitoExtension.class)
 class CountryServiceTest {
 
@@ -56,13 +57,10 @@ class CountryServiceTest {
         Country country = Country.builder()
                                  .name("Poland")
                                  .build();
-        doAnswer(new Answer() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                Country country = invocation.getArgument(0);
-                country.setId(1L);
-                return null;
-            }
+        doAnswer(invocation -> {
+            Country country1 = invocation.getArgument(0);
+            country1.setId(1L);
+            return null;
         }).when(repository).create(country);
 
         assertEquals(country, service.create(country));

@@ -10,17 +10,20 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.any;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -122,13 +125,10 @@ class UserServiceTest {
                         .email("lala@gmail.com")
                         .password("MTIzNA==")
                         .build();
-        doAnswer(new Answer() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                User user = invocation.getArgument(0);
-                user.setId(1L);
-                return null;
-            }
+        doAnswer(invocation -> {
+            User user1 = invocation.getArgument(0);
+            user1.setId(1L);
+            return null;
         }).when(repository).create(user);
 
         assertEquals(user, service.create(user));
