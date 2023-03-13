@@ -4,96 +4,14 @@
 
     <resultMap id="elementaryMap" type="Airport" autoMapping="false">
         <id property="id" column="airport_id"/>
-        <result property="name" column="airport_name"/>
-    </resultMap>
-
-    <resultMap id="fullMap" type="Airport" autoMapping="false" extends="elementaryMap">
-        <result property="iata" column="airport_iata_code"/>
-        <result property="icao" column="airport_icao_code"/>
     </resultMap>
 
     <resultMap id="fromAirportMap" type="Airport" autoMapping="false">
         <id property="id" column="airport_from_id"/>
-        <result property="name" column="airport_from_name"/>
-        <result property="iata" column="airport_from_iata_code"/>
-        <result property="icao" column="airport_from_icao_code"/>
     </resultMap>
 
     <resultMap id="toAirportMap" type="Airport" autoMapping="false">
         <id property="id" column="airport_to_id"/>
-        <result property="name" column="airport_to_name"/>
-        <result property="iata" column="airport_to_iata_code"/>
-        <result property="icao" column="airport_to_icao_code"/>
     </resultMap>
-
-    <select id="findAll" resultMap="fullMap">
-        select id as airport_id,
-               name as airport_name,
-               iata as airport_iata_code,
-               icao as airport_icao_code
-        from airports
-    </select>
-
-    <select id="findById" resultMap="fullMap">
-        select id as airport_id,
-               name as airport_name,
-               iata as airport_iata_code,
-               icao as airport_icao_code
-        from airports
-        where id = #{id}
-    </select>
-    
-    <select id="search" resultMap="fullMap">
-        select id as airport_id,
-               name as airport_name,
-               iata as airport_iata_code,
-               icao as airport_icao_code
-        from airports
-        where name like #{name} and
-              iata like #{iata} and
-              icao like #{icao}
-    </select>
-
-    <insert id="create" useGeneratedKeys="true" keyProperty="airport.id">
-        insert into airports(fk_city_id, name, iata, icao)
-               values(#{cityId}, #{airport.name}, #{airport.iata}, #{airport.icao})
-    </insert>
-
-    <update id="update">
-        update airports set fk_city_id = #{cityId},
-                            name = #{airport.name},
-                            iata = #{airport.iata},
-                            icao = #{airport.icao}
-        where id = #{airport.id}
-    </update>
-
-    <delete id="removeById">
-        delete from airports where id = #{id}
-    </delete>
-
-    <select id="isExistsById" resultType="boolean">
-        select exists (select from airports where id = #{id})
-    </select>
-
-    <select id="isExistsByName" resultType="boolean">
-        select exists (select from airports where name = #{name}
-        <if test="id != null">
-            and id != #{id}
-        </if>)
-    </select>
-
-    <select id="isExistsByIata" resultType="boolean">
-        select exists (select from airports where iata = #{iata}
-        <if test="id != null">
-            and id != #{id}
-        </if>)
-    </select>
-
-    <select id="isExistsByIcao" resultType="boolean">
-        select exists (select from airports where icao = #{icao}
-        <if test="id != null">
-            and id != #{id}
-        </if>)
-    </select>
 
 </mapper>

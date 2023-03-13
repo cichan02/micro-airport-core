@@ -27,16 +27,8 @@
 
     <select id="findAll" resultMap="fullMap">
         select flights.id as flight_id,
-
-               airport_from.id as airport_from_id,
-               airport_from.name as airport_from_name,
-               airport_from.iata as airport_from_iata_code,
-               airport_from.icao as airport_from_icao_code,
-
-               airport_to.id as airport_to_id,
-               airport_to.name as airport_to_name,
-               airport_to.iata as airport_to_iata_code,
-               airport_to.icao as airport_to_icao_code,
+               flights.fk_airport_from_id as airport_from_id,
+               flights.fk_airport_to_id as airport_to_id,
 
                airplanes.id as airplane_id,
                airplanes.model as airplane_model,
@@ -59,16 +51,8 @@
 
     <select id="findById" resultMap="fullMap">
         select flights.id as flight_id,
-
-               airport_from.id as airport_from_id,
-               airport_from.name as airport_from_name,
-               airport_from.iata as airport_from_iata_code,
-               airport_from.icao as airport_from_icao_code,
-
-               airport_to.id as airport_to_id,
-               airport_to.name as airport_to_name,
-               airport_to.iata as airport_to_iata_code,
-               airport_to.icao as airport_to_icao_code,
+               flights.fk_airport_from_id as airport_from_id,
+               flights.fk_airport_to_id as airport_to_id,
 
                airplanes.id as airplane_id,
                airplanes.model as airplane_model,
@@ -83,25 +67,15 @@
                flights.departure_time as flight_departure_time,
                flights.arrival_time as flight_arrival_time
 
-        from flights inner join airports airport_from on flights.fk_airport_from_id = airport_from.id
-                     inner join airports airport_to on flights.fk_airport_to_id = airport_to.id
-                     inner join airlines on flights.fk_airline_id = airlines.id
+        from flights inner join airlines on flights.fk_airline_id = airlines.id
                      inner join airplanes on flights.fk_airplane_id = airplanes.id
         where flights.id = #{id}
     </select>
 
     <select id="search" resultMap="searchMap">
         select flights.id as flight_id,
-
-               airport_from.id as airport_from_id,
-               airport_from.name as airport_from_name,
-               airport_from.iata as airport_from_iata,
-               airport_from.icao as airport_from_icao,
-
-               airport_to.id as airport_to_id,
-               airport_to.name as airport_to_name,
-               airport_to.iata as airport_to_iata_code,
-               airport_to.icao as airport_to_icao_code,
+               flights.fk_airport_from_id as airport_from_id,
+               flights.fk_airport_to_id as airport_to_id,
 
                airlines.id as airline_id,
                airlines.name as airline_name,
@@ -110,9 +84,7 @@
                flights.departure_time as flight_departure_time,
                flights.arrival_time as flight_arrival_time
 
-        from flights inner join airports airport_from on flights.fk_airport_from_id = airport_from.id
-                     inner join airports airport_to on flights.fk_airport_to_id = airport_to.id
-                     inner join airlines on flights.fk_airline_id = airlines.id
+        from flights inner join airlines on flights.fk_airline_id = airlines.id
         where airport_from.iata in
               <foreach collection="fromAirports" item="code" open="(" separator="," close=")">
                     #{code}

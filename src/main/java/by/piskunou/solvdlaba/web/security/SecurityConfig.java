@@ -25,11 +25,7 @@ public class SecurityConfig {
                 .requestMatchers("/airlines",
                                            "/airlines/*",
                                            "/airplanes",
-                                           "/airplanes/*",
-                                           "/airports",
-                                           "/airports/*",
-                                           "/countries",
-                                           "/countries/*").hasAuthority("ADMIN")
+                                           "/airplanes/*").hasAuthority("ADMIN")
                 .requestMatchers("/refresh",
                                            "/login",
                                            "/swagger-ui/*",

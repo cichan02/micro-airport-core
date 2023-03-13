@@ -4,6 +4,7 @@
 create table if not exists users(
     id bigserial primary key,
     username varchar(50) not null unique,
+    email varchar(100) not null unique,
     password varchar(300) not null unique,
     role varchar(10) not null
 );
@@ -18,31 +19,6 @@ create table if not exists airplanes(
 );
 --rollback drop table airplanes;
 
---changeset cichan:create-countries-table
-create table if not exists countries(
-    id bigserial primary key,
-    "name" varchar(50) not null unique
-);
---rollback drop table countries;
-
---changeset cichan:create-cities-table
-create table if not exists cities(
-    id bigserial primary key,
-    fk_country_id bigint not null references countries(id) on delete cascade on update no action,
-    "name" varchar(50) not null unique
-);
---rollback drop table cities;
-
---changeset cichan:create-airports-table
-create table if not exists airports(
-    id bigserial primary key,
-    fk_city_id bigint not null references cities(id) on delete cascade on update no action,
-    "name" varchar(200) not null unique,
-    iata varchar check (length(iata) = 3) unique,
-    icao varchar check (length(icao) = 4) unique
-);
---rollback drop table airports;
-
 --changeset cichan:create-airlines-table
 create table if not exists airlines(
     id bigserial primary key,
@@ -56,8 +32,8 @@ create table if not exists airlines(
 --changeset cichan:create-flights-table
 create table if not exists flights(
     id bigserial primary key,
-    fk_airport_from_id bigint not null references airports(id) on delete restrict on update no action,
-    fk_airport_to_id bigint not null references airports(id) on delete restrict on update no action,
+    fk_airport_from_id bigint not null,
+    fk_airport_to_id bigint not null,
     fk_airline_id bigint not null references airlines(id) on delete restrict on update no action,
     fk_airplane_id bigint not null references airplanes(id) on delete restrict on update no action,
     departure_time timestamp not null,
@@ -70,7 +46,7 @@ create table if not exists flights(
 --changeset cichan:create-passengers-table
 create table if not exists passengers(
     id bigserial primary key,
-    fk_country_id bigint references countries(id) on delete set null on update no action,
+    fk_country_id bigint not null,
     firstname varchar(50) not null,
     surname varchar(50) not null,
     date_of_birth date not null,
@@ -96,7 +72,3 @@ create table if not exists tickets(
     seat_no int not null
 );
 --rollback drop table tickets
-
---changeset cichan:add-email-to-users
-alter table users add column if not exists email varchar(100) not null unique;
---rollback alter table users drop column if exists email

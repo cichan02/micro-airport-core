@@ -10,14 +10,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class AirplaneServiceTest {
@@ -70,13 +73,10 @@ class AirplaneServiceTest {
                                     .seatsInRow((byte) 6)
                                     .rowNo((short) 40)
                                     .build();
-        doAnswer(new Answer() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                Airplane airplane = invocation.getArgument(0);
-                airplane.setId(1L);
-                return null;
-            }
+        doAnswer(invocation -> {
+            Airplane airplane1 = invocation.getArgument(0);
+            airplane1.setId(1L);
+            return null;
         }).when(repository).create(airplane);
 
         assertEquals(airplane, service.create(airplane));
