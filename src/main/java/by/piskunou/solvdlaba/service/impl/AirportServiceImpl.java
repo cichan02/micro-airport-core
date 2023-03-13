@@ -13,7 +13,7 @@ public class AirportServiceImpl implements AirportService {
 
     @Override
     public Airport findById(long id) {
-        Mono<Airport> airportMono = WebClient.create("http://localhost:8765/airports")
+        Mono<Airport> airportMono = WebClient.create("http://micro-airport-location/airports")
                 .get()
                 .uri("/" + id)
                 .retrieve()
@@ -24,7 +24,7 @@ public class AirportServiceImpl implements AirportService {
 
     @Override
     public boolean isExists(long id) {
-        Mono<Boolean> booleanMono = WebClient.create("http://localhost:8765/airports/exists")
+        Mono<Boolean> booleanMono = WebClient.create("http://micro-airport-location/airports/exists")
                 .get()
                 .uri("/" + id)
                 .retrieve()

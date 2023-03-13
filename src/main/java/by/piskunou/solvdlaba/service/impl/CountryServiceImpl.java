@@ -13,7 +13,7 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public Country findById(long id) {
-        Mono<Country> countryMono = WebClient.create("http://localhost:8765/countries")
+        Mono<Country> countryMono = WebClient.create("http://micro-airport-location/countries")
                 .get()
                 .uri("/" + id)
                 .retrieve()
@@ -24,7 +24,7 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public boolean isExists(long id) {
-        Mono<Boolean> booleanMono = WebClient.create("http://localhost:8765/countries/exists")
+        Mono<Boolean> booleanMono = WebClient.create("http://micro-airport-location/countries/exists")
                 .get()
                 .uri("/" + id)
                 .retrieve()
