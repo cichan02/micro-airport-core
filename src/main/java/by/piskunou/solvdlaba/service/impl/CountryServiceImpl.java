@@ -11,7 +11,6 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class CountryServiceImpl implements CountryService {
 
-    //todo: rewrite
     @Override
     public Country findById(long id) {
         Mono<Country> countryMono = WebClient.create("http://localhost:8765/countries")
