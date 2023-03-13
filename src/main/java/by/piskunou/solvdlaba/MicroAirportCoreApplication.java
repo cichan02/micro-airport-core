@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableTransactionManagement
-public class AirportApplication {
+public class MicroAirportCoreApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AirportApplication.class, args);
+        SpringApplication.run(MicroAirportCoreApplication.class, args);
     }
 
 }

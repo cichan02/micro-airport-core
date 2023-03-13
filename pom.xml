@@ -12,7 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <start-class>by.piskunou.solvdlaba.AirportApplication</start-class>
+        <start-class>by.piskunou.solvdlaba.MicroAirportCoreApplication</start-class>
         <java.version>17</java.version>
         <springboot.version>3.0.1</springboot.version>
         <maven.version>3.10.1</maven.version>
@@ -280,7 +280,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${springboot.version}</version>
                 <configuration>
-                    <mainClass>by.piskunou.solvdlaba.AirportApplication</mainClass>
+                    <mainClass>by.piskunou.solvdlaba.MicroAirportCoreApplication</mainClass>
                     <layout>JAR</layout>
                     <excludes>
                         <exclude>
