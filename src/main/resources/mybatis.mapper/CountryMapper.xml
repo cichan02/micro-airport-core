@@ -4,44 +4,6 @@
 
     <resultMap id="elementaryMap" type="Country" autoMapping="false">
         <id property="id" column="country_id"/>
-        <result property="name" column="country_name"/>
     </resultMap>
-
-    <select id="findAll" resultMap="elementaryMap">
-        select id as country_id,
-               name as country_name
-        from countries
-    </select>
-
-    <select id="findById" resultMap="elementaryMap">
-        select id as country_id,
-               name as country_name
-        from countries
-        where id = #{id}
-    </select>
-
-    <insert id="create" useGeneratedKeys="true" keyProperty="id">
-        insert into countries(name) values(#{name})
-    </insert>
-
-    <update id="update">
-        update countries set name = #{name}
-        where id = #{id}
-    </update>
-
-    <delete id="removeById">
-        delete from countries where id = #{id}
-    </delete>
-
-    <select id="isExistsById" resultType="boolean">
-        select exists (select from countries where id = #{id})
-    </select>
-
-    <select id="isExistsByName" resultType="boolean">
-        select exists (select from countries where name = #{name}
-        <if test="id != null">
-            and id != #{id}
-        </if>)
-    </select>
 
 </mapper>

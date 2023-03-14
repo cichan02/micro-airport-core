@@ -29,16 +29,8 @@
 
                flights.id as flight_id,
                flights.departure_time as flight_departure_time,
-
-               airport_from.id as airport_from_id,
-               airport_from.name as airport_from_name,
-               airport_from.iata as airport_from_iata_code,
-               airport_from.icao as airport_from_icao_code,
-
-               airport_to.id as airport_to_id,
-               airport_to.name as airport_to_name,
-               airport_to.iata as airport_to_iata_code,
-               airport_to.icao as airport_to_icao_code,
+               flights.fk_airport_from_id as airport_from_id,
+               flights.fk_airport_to_id as airport_to_id,
 
                airlines.id as airline_id,
                airlines.name as airline_name,
@@ -48,8 +40,6 @@
 
         from tickets inner join passengers on tickets.fk_passenger_id = passengers.id
                      inner join flights on tickets.fk_flight_id = flights.id
-                     inner join airports airport_from on flights.fk_airport_from_id = airport_from.id
-                     inner join airports airport_to on flights.fk_airport_to_id = airport_to.id
                      inner join airlines on flights.fk_airline_id = airlines.id
         where tickets.id = #{id} and fk_owner_id = #{userId}
     </select>

@@ -20,6 +20,7 @@ public class TicketServiceImpl implements TicketService {
     private final UserService userService;
     private final PassengerService passengerService;
     private final PassportService passportService;
+    private final AirportService airportService;
     private final TicketRepository repository;
 
     @Override
@@ -32,8 +33,11 @@ public class TicketServiceImpl implements TicketService {
     @Transactional(readOnly = true)
     public Ticket findById(long id, long userId) {
         elementaryCheckIsEntityValid(userId);
-        return repository.findById(id, userId)
-                         .orElseThrow(() -> new ResourceNotExistsException("There's no ticket with such id"));
+        Ticket ticket =  repository.findById(id, userId)
+                                   .orElseThrow(() -> new ResourceNotExistsException("There's no ticket with such id"));
+        ticket.getFlight().setFrom( airportService.findById(ticket.getFlight().getFrom().getId()) );
+        ticket.getFlight().setTo( airportService.findById(ticket.getFlight().getTo().getId()) );
+        return ticket;
     }
 
     @Override
