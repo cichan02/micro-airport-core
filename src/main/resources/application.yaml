@@ -1,6 +1,8 @@
 spring:
   application:
     name: micro-airport-core
+  config:
+    import: optional:.env[.properties]
 
 # Configuration data sources
   datasource:
@@ -40,7 +42,7 @@ server:
 
 eureka:
   client:
-    service-host: localhost
+    service-host: ${MAIN_HOST}
     service-url:
       defaultZone: http://${eureka.client.service-host}:8761/eureka
   instance:
