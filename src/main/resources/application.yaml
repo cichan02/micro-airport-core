@@ -1,26 +1,28 @@
 spring:
   application:
     name: micro-airport-core
+  config:
+    import: optional:.env[.properties]
 
-# Configuration data sources
+  #Configuration data sources
   datasource:
     driver-class-name: org.postgresql.Driver
-    url:
-    username:
-    password:
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
 
   #Liquibase
   liquibase:
     enabled: true
     change-log: classpath:db.changelog/db.changelog-master.yaml
-    default-schema:
+    default-schema: ${LIQUIBASE_SCHEMA}
 
   #Email
   mail:
     host: smtp.gmail.com
     port: 587
-    username:
-    password:
+    username: ${GMAIL_USER}
+    password: ${GMAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -28,19 +30,23 @@ spring:
           starttls:
             enable: true
 
+  #Kafka
+  kafka:
+    bootstrap-servers: ${MAIN_HOST}:9092
+
 # MyBatis
 mybatis:
   mapper-locations: classpath:mybatis.mapper/*.xml
   type-aliases-package: by.piskunou.solvdlaba.domain
 
-jwt-secret:
+jwt-secret: ${JWT_SECRET}
 
 server:
   port: 0
 
 eureka:
   client:
-    service-host: localhost
+    service-host: ${MAIN_HOST}
     service-url:
       defaultZone: http://${eureka.client.service-host}:8761/eureka
   instance:

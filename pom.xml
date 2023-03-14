@@ -6,16 +6,21 @@
     <groupId>by.piskunou.solvdlaba</groupId>
     <artifactId>micro-airport-core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
     <name>Airport</name>
     <description>Airport</description>
 
     <properties>
+        <!-- General properties -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <start-class>by.piskunou.solvdlaba.MicroAirportCoreApplication</start-class>
         <java.version>17</java.version>
+        <maven.version>3.9.0</maven.version>
+
+        <!-- Dependencies properties -->
         <spring-boot.version>3.0.1</spring-boot.version>
-        <maven.version>3.10.1</maven.version>
         <mapstruct.version>1.5.3.Final</mapstruct.version>
         <lombok.version>1.18.24</lombok.version>
         <postgresql.version>42.5.1</postgresql.version>
@@ -38,6 +43,9 @@
         <commons-codes.version>1.15</commons-codes.version>
         <jettison.version>1.5.3</jettison.version>
         <spring-cloud.version>2022.0.1</spring-cloud.version>
+
+        <!-- Build properties -->
+        <maven.compiler.version>3.10.1</maven.compiler.version>
     </properties>
 
     <dependencies>
@@ -268,6 +276,13 @@
             <version>${spring-boot.version}</version>
         </dependency>
 
+        <!-- Kafka -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
@@ -322,7 +337,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.version}</version>
+                <version>${maven.compiler.version}</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>

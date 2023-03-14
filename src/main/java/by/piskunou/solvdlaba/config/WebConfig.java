@@ -1,4 +1,4 @@
-package by.piskunou.solvdlaba.web;
+package by.piskunou.solvdlaba.config;
 
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.TemplateLoader;
